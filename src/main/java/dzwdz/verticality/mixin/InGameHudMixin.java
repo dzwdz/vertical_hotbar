@@ -2,6 +2,7 @@ package dzwdz.verticality.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dzwdz.verticality.Vec2i;
+import dzwdz.verticality.client.EntryPoint;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -110,6 +111,36 @@ public abstract class InGameHudMixin extends DrawableHelper {
         if (playerEntity.getAir() < playerEntity.getMaxAir())
             verticality$drawStatusBar(matrixStack, i++, 16, 18, air, 0xFFFFFF);
 
+        callbackInfo.cancel();
+    }
+
+    @Inject(at = @At("HEAD"), cancellable = true,
+            method = "Lnet/minecraft/client/gui/hud/InGameHud;renderExperienceBar(Lnet/minecraft/client/util/math/MatrixStack;I)V")
+    public void renderExperienceBar(MatrixStack matrixStack, int _x, CallbackInfo callbackInfo) {
+        client.getTextureManager().bindTexture(EntryPoint.BARS);
+
+        int nextLevelXP = client.player.getNextLevelExperience();
+        if (nextLevelXP > 0) {
+            int n = (int)(client.player.experienceProgress * 183f);
+            int y = scaledHeight - 32 + 3;
+            drawTexture(matrixStack, scaledWidth - 29, 1, 15, 0, 5, 182);
+            if (n > 0) {
+                drawTexture(matrixStack, scaledWidth - 29, 1, 10, 0, 5, n);
+            }
+        }
+
+        if (client.player.experienceLevel > 0) {
+            String s = "" + this.client.player.experienceLevel;
+            int x = scaledWidth - client.textRenderer.getWidth(s) - 30;
+            int y = 174;
+            client.textRenderer.draw(matrixStack, s, x + 1, y, 0);
+            client.textRenderer.draw(matrixStack, s, x - 1, y, 0);
+            client.textRenderer.draw(matrixStack, s, x, y + 1, 0);
+            client.textRenderer.draw(matrixStack, s, x, y - 1, 0);
+            client.textRenderer.draw(matrixStack, s, x, y, 0x80FF20);
+        }
+
+        client.getTextureManager().bindTexture(GUI_ICONS_TEXTURE);
         callbackInfo.cancel();
     }
 }
