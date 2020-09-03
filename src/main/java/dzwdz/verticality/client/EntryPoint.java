@@ -42,7 +42,7 @@ public class EntryPoint implements ClientModInitializer {
 
     public static Vec2i getLevelPos(int width, int height) {
         return new Vec2i(
-                width - (BAR_ALTERNATE ? 1 : 31),
+                width - (BAR_ALTERNATE ? 1 : 33),
                 (BAR_ALTERNATE ? 185 : 174)
         );
     }
