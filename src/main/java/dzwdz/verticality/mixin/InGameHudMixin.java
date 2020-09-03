@@ -124,7 +124,10 @@ public abstract class InGameHudMixin extends DrawableHelper {
             Vec2i pos = getBarPos(scaledWidth, scaledHeight);
             drawTexture(matrixStack, pos.x, pos.y, 15, 0, 5, 182);
             if (n > 0) {
-                drawTexture(matrixStack, pos.x, pos.y, 10, 0, 5, n);
+                if (BAR_FLIP)
+                    drawTexture(matrixStack, pos.x, pos.y + 182 - n, 10, 182 - n, 5, n);
+                else
+                    drawTexture(matrixStack, pos.x, pos.y, 10, 0, 5, n);
             }
         }
 

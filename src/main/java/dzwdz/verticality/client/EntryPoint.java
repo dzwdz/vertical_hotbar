@@ -11,6 +11,7 @@ public class EntryPoint implements ClientModInitializer {
     public static final Identifier BARS = new Identifier("verticality", "textures/gui/bars.png");
 
     public static final boolean BAR_ALTERNATE = false;
+    public static final boolean BAR_FLIP = false;
 
     @Override
     public void onInitializeClient() {
