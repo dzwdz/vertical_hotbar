@@ -1,6 +1,7 @@
 package dzwdz.verticality.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dzwdz.verticality.Vec2i;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -14,6 +15,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import static dzwdz.verticality.client.EntryPoint.getSlotPos;
+import static dzwdz.verticality.client.EntryPoint.getStatusPos;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin extends DrawableHelper {
@@ -29,14 +33,6 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
     @Shadow @Final private static Identifier WIDGETS_TEX;
 
-    public int[] verticality$getSlotPos(int i) {
-        if (i == 9) return new int[]{26, 2};
-        return new int[]{
-            2,
-            2 + i * 20
-        };
-    }
-
     @Inject(at = @At("HEAD"), cancellable = true,
             method = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbar(FLnet/minecraft/client/util/math/MatrixStack;)V")
     public void renderHotbar(float f, MatrixStack matrixStack, CallbackInfo callbackInfo) {
@@ -47,20 +43,20 @@ public abstract class InGameHudMixin extends DrawableHelper {
         client.getTextureManager().bindTexture(WIDGETS_TEX);
 
         for(int i = 0; i < 9; i++) {
-            int[] pos = verticality$getSlotPos(i);
-            drawTexture(matrixStack, pos[0], pos[1], 1+20*i, 1, 20, 20);
+            Vec2i pos = getSlotPos(i, scaledWidth, scaledHeight);
+            drawTexture(matrixStack, pos.x, pos.y, 1+20*i, 1, 20, 20);
             if (i == playerEntity.inventory.selectedSlot)
-                drawTexture(matrixStack, pos[0] - 2, pos[1] - 2, 0, 22, 24, 24);
+                drawTexture(matrixStack, pos.x - 2, pos.y - 2, 0, 22, 24, 24);
         }
 
         { // selected slot overlay
-            int[] pos = verticality$getSlotPos(playerEntity.inventory.selectedSlot);
-            drawTexture(matrixStack, pos[0] - 2, pos[1] - 2, 0, 22, 24, 24);
+            Vec2i pos = getSlotPos(playerEntity.inventory.selectedSlot, scaledWidth, scaledHeight);
+            drawTexture(matrixStack, pos.x - 2, pos.y - 2, 0, 22, 24, 24);
         }
 
         { // offhand
-            int[] pos = verticality$getSlotPos(9);
-            drawTexture(matrixStack, pos[0] - 1, pos[1] - 2, 24, 22, 29, 24);
+            Vec2i pos = getSlotPos(9, scaledWidth, scaledHeight);
+            drawTexture(matrixStack, pos.x - 1, pos.y - 2, 24, 22, 29, 24);
         }
 
         RenderSystem.enableRescaleNormal();
@@ -68,13 +64,13 @@ public abstract class InGameHudMixin extends DrawableHelper {
         RenderSystem.defaultBlendFunc();
 
         for (int i = 0; i < 9; i++) {
-            int[] pos = verticality$getSlotPos(i);
-            renderHotbarItem(pos[0] + 2, pos[1] + 2, f, playerEntity, playerEntity.inventory.main.get(i));
+            Vec2i pos = getSlotPos(i, scaledWidth, scaledHeight);
+            renderHotbarItem(pos.x + 2, pos.y + 2, f, playerEntity, playerEntity.inventory.main.get(i));
         }
 
         {
-            int[] pos = verticality$getSlotPos(9);
-            renderHotbarItem(pos[0] + 2, pos[1] + 2, f, playerEntity, playerEntity.getOffHandStack());
+            Vec2i pos = getSlotPos(9, scaledWidth, scaledHeight);
+            renderHotbarItem(pos.x + 2, pos.y + 2, f, playerEntity, playerEntity.getOffHandStack());
         }
 
         RenderSystem.disableRescaleNormal();
@@ -83,10 +79,14 @@ public abstract class InGameHudMixin extends DrawableHelper {
         callbackInfo.cancel();
     }
 
-    public void verticality$drawStatusBar(MatrixStack matrixStack, int y, int u, int v, int val, int color) {
-        drawTexture(matrixStack, 25, y, 16, v, 9, 9);
-        drawTexture(matrixStack, 25, y, u, v, 9, 9);
-        client.textRenderer.drawWithShadow(matrixStack, Integer.toString(val), 35, y+1, color);
+    public void verticality$drawStatusBar(MatrixStack matrixStack, int i, int u, int v, int val, int color) {
+        Vec2i pos = getStatusPos(i, scaledWidth, scaledHeight);
+
+        drawTexture(matrixStack, pos.x, pos.y, 16, v, 9, 9);
+        drawTexture(matrixStack, pos.x, pos.y, u, v, 9, 9);
+        String s = Integer.toString(val);
+        int w = client.textRenderer.getWidth(s);
+        client.textRenderer.drawWithShadow(matrixStack, Integer.toString(val), pos.x - 2 - w, pos.y, color);
         client.getTextureManager().bindTexture(GUI_ICONS_TEXTURE);
     }
 
@@ -96,20 +96,19 @@ public abstract class InGameHudMixin extends DrawableHelper {
         PlayerEntity playerEntity = getCameraPlayer();
         if (playerEntity == null) return;
 
-        int baseY = 26;
-        int o = 0;
+        int i = 0;
 
-        verticality$drawStatusBar(matrixStack, baseY + o++*12, 52, 0, (int)playerEntity.getHealth(), 0xFFFFFF);
-        verticality$drawStatusBar(matrixStack, baseY + o++*12, 52, 27, playerEntity.getHungerManager().getFoodLevel(), 0xFFFFFF);
+        verticality$drawStatusBar(matrixStack, i++, 52, 0, (int)playerEntity.getHealth(), 0xFFFFFF);
+        verticality$drawStatusBar(matrixStack, i++, 52, 27, playerEntity.getHungerManager().getFoodLevel(), 0xFFFFFF);
 
         int armor = playerEntity.getArmor();
         if (armor > 0)
-            verticality$drawStatusBar(matrixStack, baseY + o++*12, 34, 9, armor, 0xFFFFFF);
+            verticality$drawStatusBar(matrixStack, i++, 34, 9, armor, 0xFFFFFF);
 
         int air = (playerEntity.getAir()*20)/playerEntity.getMaxAir();
         if (air < 0) air = 0;
         if (playerEntity.getAir() < playerEntity.getMaxAir())
-            verticality$drawStatusBar(matrixStack, baseY + o++*12, 16, 18, air, 0xFFFFFF);
+            verticality$drawStatusBar(matrixStack, i++, 16, 18, air, 0xFFFFFF);
 
         callbackInfo.cancel();
     }
