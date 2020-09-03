@@ -30,9 +30,10 @@ public abstract class InGameHudMixin extends DrawableHelper {
     @Shadow @Final private static Identifier WIDGETS_TEX;
 
     public int[] verticality$getSlotPos(int i) {
+        if (i == 9) return new int[]{26, 2};
         return new int[]{
-            scaledWidth - 22,
-            scaledHeight/2 + i * 20 - 90
+            2,
+            2 + i * 20
         };
     }
 
@@ -52,6 +53,16 @@ public abstract class InGameHudMixin extends DrawableHelper {
                 drawTexture(matrixStack, pos[0] - 2, pos[1] - 2, 0, 22, 24, 24);
         }
 
+        { // selected slot overlay
+            int[] pos = verticality$getSlotPos(playerEntity.inventory.selectedSlot);
+            drawTexture(matrixStack, pos[0] - 2, pos[1] - 2, 0, 22, 24, 24);
+        }
+
+        { // offhand
+            int[] pos = verticality$getSlotPos(9);
+            drawTexture(matrixStack, pos[0] - 1, pos[1] - 2, 24, 22, 29, 24);
+        }
+
         RenderSystem.enableRescaleNormal();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -59,6 +70,11 @@ public abstract class InGameHudMixin extends DrawableHelper {
         for (int i = 0; i < 9; i++) {
             int[] pos = verticality$getSlotPos(i);
             renderHotbarItem(pos[0] + 2, pos[1] + 2, f, playerEntity, playerEntity.inventory.main.get(i));
+        }
+
+        {
+            int[] pos = verticality$getSlotPos(9);
+            renderHotbarItem(pos[0] + 2, pos[1] + 2, f, playerEntity, playerEntity.getOffHandStack());
         }
 
         RenderSystem.disableRescaleNormal();
