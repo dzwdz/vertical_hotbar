@@ -82,4 +82,35 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
         callbackInfo.cancel();
     }
+
+    public void verticality$drawStatusBar(MatrixStack matrixStack, int y, int u, int v, int val, int color) {
+        drawTexture(matrixStack, 25, y, 16, v, 9, 9);
+        drawTexture(matrixStack, 25, y, u, v, 9, 9);
+        client.textRenderer.drawWithShadow(matrixStack, Integer.toString(val), 35, y+1, color);
+        client.getTextureManager().bindTexture(GUI_ICONS_TEXTURE);
+    }
+
+    @Inject(at = @At("HEAD"), cancellable = true,
+            method = "Lnet/minecraft/client/gui/hud/InGameHud;renderStatusBars(Lnet/minecraft/client/util/math/MatrixStack;)V")
+    public void renderStatusBars(MatrixStack matrixStack, CallbackInfo callbackInfo) {
+        PlayerEntity playerEntity = getCameraPlayer();
+        if (playerEntity == null) return;
+
+        int baseY = 26;
+        int o = 0;
+
+        verticality$drawStatusBar(matrixStack, baseY + o++*12, 52, 0, (int)playerEntity.getHealth(), 0xFFFFFF);
+        verticality$drawStatusBar(matrixStack, baseY + o++*12, 52, 27, playerEntity.getHungerManager().getFoodLevel(), 0xFFFFFF);
+
+        int armor = playerEntity.getArmor();
+        if (armor > 0)
+            verticality$drawStatusBar(matrixStack, baseY + o++*12, 34, 9, armor, 0xFFFFFF);
+
+        int air = (playerEntity.getAir()*20)/playerEntity.getMaxAir();
+        if (air < 0) air = 0;
+        if (playerEntity.getAir() < playerEntity.getMaxAir())
+            verticality$drawStatusBar(matrixStack, baseY + o++*12, 16, 18, air, 0xFFFFFF);
+
+        callbackInfo.cancel();
+    }
 }
