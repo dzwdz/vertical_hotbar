@@ -10,6 +10,8 @@ import net.minecraft.util.Identifier;
 public class EntryPoint implements ClientModInitializer {
     public static final Identifier BARS = new Identifier("verticality", "textures/gui/bars.png");
 
+    public static final boolean BAR_ALTERNATE = false;
+
     @Override
     public void onInitializeClient() {
 
@@ -18,7 +20,7 @@ public class EntryPoint implements ClientModInitializer {
     public static Vec2i getSlotPos(int i, int width, int height) {
         if (i == 9) return new Vec2i(width - 54, 2);
         return new Vec2i(
-                width - 22,
+                width - (BAR_ALTERNATE ? 30 : 22),
                 2 + i * 20
         );
     }
@@ -27,6 +29,20 @@ public class EntryPoint implements ClientModInitializer {
         return new Vec2i(
                 width - 43,
                 26 + i * 12
+        );
+    }
+
+    public static Vec2i getBarPos(int width, int height) {
+        return new Vec2i(
+                width - (BAR_ALTERNATE ? 7 : 30),
+                1
+        );
+    }
+
+    public static Vec2i getLevelPos(int width, int height) {
+        return new Vec2i(
+                width - (BAR_ALTERNATE ? 1 : 31),
+                (BAR_ALTERNATE ? 185 : 174)
         );
     }
 }

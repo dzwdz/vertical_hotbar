@@ -17,8 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static dzwdz.verticality.client.EntryPoint.getSlotPos;
-import static dzwdz.verticality.client.EntryPoint.getStatusPos;
+import static dzwdz.verticality.client.EntryPoint.*;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin extends DrawableHelper {
@@ -122,21 +121,22 @@ public abstract class InGameHudMixin extends DrawableHelper {
         int nextLevelXP = client.player.getNextLevelExperience();
         if (nextLevelXP > 0) {
             int n = (int)(client.player.experienceProgress * 183f);
-            drawTexture(matrixStack, scaledWidth - 30, 1, 15, 0, 5, 182);
+            Vec2i pos = getBarPos(scaledWidth, scaledHeight);
+            drawTexture(matrixStack, pos.x, pos.y, 15, 0, 5, 182);
             if (n > 0) {
-                drawTexture(matrixStack, scaledWidth - 30, 1, 10, 0, 5, n);
+                drawTexture(matrixStack, pos.x, pos.y, 10, 0, 5, n);
             }
         }
 
         if (client.player.experienceLevel > 0) {
             String s = "" + this.client.player.experienceLevel;
-            int x = scaledWidth - client.textRenderer.getWidth(s) - 31;
-            int y = 174;
-            client.textRenderer.draw(matrixStack, s, x + 1, y, 0);
-            client.textRenderer.draw(matrixStack, s, x - 1, y, 0);
-            client.textRenderer.draw(matrixStack, s, x, y + 1, 0);
-            client.textRenderer.draw(matrixStack, s, x, y - 1, 0);
-            client.textRenderer.draw(matrixStack, s, x, y, 0x80FF20);
+            Vec2i pos = getLevelPos(scaledWidth, scaledHeight);
+            int x = pos.x - client.textRenderer.getWidth(s);
+            client.textRenderer.draw(matrixStack, s, x + 1, pos.y, 0);
+            client.textRenderer.draw(matrixStack, s, x - 1, pos.y, 0);
+            client.textRenderer.draw(matrixStack, s, x, pos.y + 1, 0);
+            client.textRenderer.draw(matrixStack, s, x, pos.y - 1, 0);
+            client.textRenderer.draw(matrixStack, s, x, pos.y, 0x80FF20);
         }
 
         client.getTextureManager().bindTexture(GUI_ICONS_TEXTURE);
