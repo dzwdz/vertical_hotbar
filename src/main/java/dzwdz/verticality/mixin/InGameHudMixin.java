@@ -122,16 +122,15 @@ public abstract class InGameHudMixin extends DrawableHelper {
         int nextLevelXP = client.player.getNextLevelExperience();
         if (nextLevelXP > 0) {
             int n = (int)(client.player.experienceProgress * 183f);
-            int y = scaledHeight - 32 + 3;
-            drawTexture(matrixStack, scaledWidth - 29, 1, 15, 0, 5, 182);
+            drawTexture(matrixStack, scaledWidth - 30, 1, 15, 0, 5, 182);
             if (n > 0) {
-                drawTexture(matrixStack, scaledWidth - 29, 1, 10, 0, 5, n);
+                drawTexture(matrixStack, scaledWidth - 30, 1, 10, 0, 5, n);
             }
         }
 
         if (client.player.experienceLevel > 0) {
             String s = "" + this.client.player.experienceLevel;
-            int x = scaledWidth - client.textRenderer.getWidth(s) - 30;
+            int x = scaledWidth - client.textRenderer.getWidth(s) - 31;
             int y = 174;
             client.textRenderer.draw(matrixStack, s, x + 1, y, 0);
             client.textRenderer.draw(matrixStack, s, x - 1, y, 0);

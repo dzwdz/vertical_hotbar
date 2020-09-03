@@ -16,7 +16,7 @@ public class EntryPoint implements ClientModInitializer {
     }
 
     public static Vec2i getSlotPos(int i, int width, int height) {
-        if (i == 9) return new Vec2i(width - 51, 2);
+        if (i == 9) return new Vec2i(width - 54, 2);
         return new Vec2i(
                 width - 22,
                 2 + i * 20
@@ -25,7 +25,7 @@ public class EntryPoint implements ClientModInitializer {
 
     public static Vec2i getStatusPos(int i, int width, int height) {
         return new Vec2i(
-                width - 39,
+                width - 43,
                 26 + i * 12
         );
     }
