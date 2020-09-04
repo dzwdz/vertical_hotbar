@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static dzwdz.verticality.client.EntryPoint.*;
@@ -183,5 +184,12 @@ public abstract class InGameHudMixin extends DrawableHelper {
             method = "Lnet/minecraft/client/gui/hud/InGameHud;renderMountHealth(Lnet/minecraft/client/util/math/MatrixStack;)V")
     public void renderMountHealth(MatrixStack matrixStack, CallbackInfo callbackInfo) {
         callbackInfo.cancel();
+    }
+
+    @ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;drawWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/text/StringRenderable;FFI)I"),
+               method = "Lnet/minecraft/client/gui/hud/InGameHud;renderHeldItemTooltip(Lnet/minecraft/client/util/math/MatrixStack;)V", index = 3)
+    public float centerItemTooltip(float y) {
+        if (!ITEM_TOOLTIP) return scaledHeight + 1000;
+        return scaledHeight / 2 - 18;
     }
 }

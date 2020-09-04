@@ -13,6 +13,7 @@ public class EntryPoint implements ClientModInitializer {
     public static final boolean BAR_ALTERNATE = false;
     public static final boolean BAR_FLIP = false;
     public static final boolean BAR_BORDER = true;
+    public static final boolean ITEM_TOOLTIP = true;
     public static Vec2i OFFSET = new Vec2i(-1, 1);
 
     @Override
