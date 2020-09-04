@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -28,6 +29,8 @@ public abstract class InGameHudMixin extends DrawableHelper {
     @Shadow protected abstract void renderHotbarItem(int i, int j, float f, PlayerEntity playerEntity, ItemStack itemStack);
 
     @Shadow protected abstract PlayerEntity getCameraPlayer();
+
+    @Shadow protected abstract LivingEntity getRiddenEntity();
 
     @Shadow @Final private MinecraftClient client;
 
@@ -86,11 +89,11 @@ public abstract class InGameHudMixin extends DrawableHelper {
         callbackInfo.cancel();
     }
 
-    public void verticality$drawStatusBar(MatrixStack matrixStack, int i, int u, int v, int val, int color) {
+    public void verticality$drawStatusBar(MatrixStack matrixStack, int i, int u1, int u2, int v, int val, int color) {
         Vec2i pos = getStatusPos(i, scaledWidth, scaledHeight);
 
-        drawTexture(matrixStack, pos.x, pos.y, 16, v, 9, 9);
-        drawTexture(matrixStack, pos.x, pos.y, u, v, 9, 9);
+        drawTexture(matrixStack, pos.x, pos.y, u1, v, 9, 9);
+        drawTexture(matrixStack, pos.x, pos.y, u2, v, 9, 9);
         String s = Integer.toString(val);
         int w = client.textRenderer.getWidth(s);
         client.textRenderer.drawWithShadow(matrixStack, Integer.toString(val), pos.x - 2 - w, pos.y, color);
@@ -105,17 +108,22 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
         int i = 0;
 
-        verticality$drawStatusBar(matrixStack, i++, 52, 0, (int)playerEntity.getHealth(), 0xFFFFFF);
-        verticality$drawStatusBar(matrixStack, i++, 52, 27, playerEntity.getHungerManager().getFoodLevel(), 0xFFFFFF);
+        LivingEntity riddenEntity = getRiddenEntity();
+        if (riddenEntity != null) {
+            verticality$drawStatusBar(matrixStack, i++, 52, 88, 9, (int)riddenEntity.getHealth(), 0xFFFFFF);
+        }
+
+        verticality$drawStatusBar(matrixStack, i++, 16, 52, 0, (int)playerEntity.getHealth(), 0xFFFFFF);
+        verticality$drawStatusBar(matrixStack, i++, 16, 52, 27, playerEntity.getHungerManager().getFoodLevel(), 0xFFFFFF);
 
         int armor = playerEntity.getArmor();
         if (armor > 0)
-            verticality$drawStatusBar(matrixStack, i++, 34, 9, armor, 0xFFFFFF);
+            verticality$drawStatusBar(matrixStack, i++, 16, 34, 9, armor, 0xFFFFFF);
 
         int air = (playerEntity.getAir()*20)/playerEntity.getMaxAir();
         if (air < 0) air = 0;
         if (playerEntity.getAir() < playerEntity.getMaxAir())
-            verticality$drawStatusBar(matrixStack, i++, 16, 18, air, 0xFFFFFF);
+            verticality$drawStatusBar(matrixStack, i++, 16, 16, 18, air, 0xFFFFFF);
 
         callbackInfo.cancel();
     }
@@ -150,6 +158,30 @@ public abstract class InGameHudMixin extends DrawableHelper {
         }
 
         client.getTextureManager().bindTexture(GUI_ICONS_TEXTURE);
+        callbackInfo.cancel();
+    }
+
+    @Inject(at = @At("HEAD"), cancellable = true,
+            method = "Lnet/minecraft/client/gui/hud/InGameHud;renderMountJumpBar(Lnet/minecraft/client/util/math/MatrixStack;I)V")
+    public void renderMountJumpBar(MatrixStack matrixStack, int _x, CallbackInfo callbackInfo) {
+        client.getTextureManager().bindTexture(EntryPoint.BARS);
+
+        int n = (int)(client.player.method_3151() * 183f);
+        Vec2i pos = getBarPos(scaledWidth, scaledHeight);
+        drawTexture(matrixStack, pos.x, pos.y, 5, 0, 5, 182);
+        if (n > 0) {
+            if (BAR_FLIP)
+                drawTexture(matrixStack, pos.x, pos.y + 182 - n, 0, 182 - n, 5, n);
+            else
+                drawTexture(matrixStack, pos.x, pos.y, 0, 0, 5, n);
+        }
+
+        callbackInfo.cancel();
+    }
+
+    @Inject(at = @At("HEAD"), cancellable = true,
+            method = "Lnet/minecraft/client/gui/hud/InGameHud;renderMountHealth(Lnet/minecraft/client/util/math/MatrixStack;)V")
+    public void renderMountHealth(MatrixStack matrixStack, CallbackInfo callbackInfo) {
         callbackInfo.cancel();
     }
 }
