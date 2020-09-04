@@ -40,6 +40,13 @@ public abstract class InGameHudMixin extends DrawableHelper {
         if (playerEntity == null) return;
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        if (BAR_BORDER) {
+            client.getTextureManager().bindTexture(BARS);
+            Vec2i pos = getSlotPos(0, scaledWidth, scaledHeight);
+            drawTexture(matrixStack, pos.x - 1, pos.y - 1, 20, 0, 22, 182);
+        }
+
         client.getTextureManager().bindTexture(WIDGETS_TEX);
 
         for(int i = 0; i < 9; i++) {
