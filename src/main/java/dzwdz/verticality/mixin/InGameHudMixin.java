@@ -117,16 +117,21 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
         LivingEntity riddenEntity = getRiddenEntity();
         if (riddenEntity != null) {
-            verticality$drawStatusBar(matrixStack, i++, 52, 88, 9, (int)riddenEntity.getHealth(), 0xFFFFFF);
+            int hp = (int)riddenEntity.getHealth();
+            int maxHP = (int)riddenEntity.getMaxHealth();
+            verticality$drawStatusBar(matrixStack, i++, 52, 88 + (hp <= maxHP*.75 ? 9 : 0), 9, hp, 0xFFFFFF);
         }
 
-        verticality$drawStatusBar(matrixStack, i++, 16, 52, 0, (int)playerEntity.getHealth(), 0xFFFFFF);
+        int playerHP = (int)playerEntity.getHealth();
+        int playerMaxHP = (int)playerEntity.getMaxHealth();
+        verticality$drawStatusBar(matrixStack, i++, 16, 52 + (playerHP <= playerMaxHP*.75 ? 9 : 0), 0, playerHP, 0xFFFFFF);
 
         int absorption = (int)playerEntity.getAbsorptionAmount();
         if (absorption > 0)
             verticality$drawStatusBar(matrixStack, i++, 16, 160, 0, absorption, 0xFFFF00);
 
-        verticality$drawStatusBar(matrixStack, i++, 16, 52, 27, playerEntity.getHungerManager().getFoodLevel(), 0xFFFFFF);
+        int hunger = playerEntity.getHungerManager().getFoodLevel();
+        verticality$drawStatusBar(matrixStack, i++, 16, 52 + (hunger <= 15 ? 9 : 0), 27, hunger, 0xFFFFFF);
 
         int armor = playerEntity.getArmor();
         if (armor > 0)
