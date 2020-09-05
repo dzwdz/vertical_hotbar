@@ -35,7 +35,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
     @Shadow @Final private MinecraftClient client;
 
-    @Shadow @Final private static Identifier WIDGETS_TEX;
+    @Shadow @Final private static Identifier WIDGETS_TEXTURE;
 
     @Inject(at = @At("HEAD"), cancellable = true,
             method = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbar(FLnet/minecraft/client/util/math/MatrixStack;)V")
@@ -53,7 +53,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
             drawTexture(matrixStack, pos.x - 1, pos.y - 1, 20, 0, 22, 182);
         }
 
-        client.getTextureManager().bindTexture(WIDGETS_TEX);
+        client.getTextureManager().bindTexture(WIDGETS_TEXTURE);
 
         for(int i = 0; i < 9; i++) {
             Vec2i pos = getSlotPos(i, scaledWidth, scaledHeight);
@@ -208,7 +208,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
         callbackInfo.cancel();
     }
 
-    @ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;drawWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/text/StringRenderable;FFI)I"),
+    @ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;drawWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/text/Text;FFI)I"),
                method = "Lnet/minecraft/client/gui/hud/InGameHud;renderHeldItemTooltip(Lnet/minecraft/client/util/math/MatrixStack;)V", index = 3)
     public float centerItemTooltip(float y) {
         if (!config.enabled) return y;
