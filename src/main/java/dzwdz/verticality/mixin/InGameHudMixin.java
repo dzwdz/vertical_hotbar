@@ -149,9 +149,9 @@ public abstract class InGameHudMixin extends DrawableHelper {
             drawTexture(matrixStack, pos.x, pos.y, 15, 0, 5, 182);
             if (n > 0) {
                 if (config.flipBar)
-                    drawTexture(matrixStack, pos.x, pos.y + 182 - n, 10, 182 - n, 5, n);
-                else
                     drawTexture(matrixStack, pos.x, pos.y, 10, 0, 5, n);
+                else
+                    drawTexture(matrixStack, pos.x, pos.y + 182 - n, 10, 182 - n, 5, n);
             }
         }
 
@@ -182,9 +182,9 @@ public abstract class InGameHudMixin extends DrawableHelper {
         drawTexture(matrixStack, pos.x, pos.y, 5, 0, 5, 182);
         if (n > 0) {
             if (config.flipBar)
-                drawTexture(matrixStack, pos.x, pos.y + 182 - n, 0, 182 - n, 5, n);
-            else
                 drawTexture(matrixStack, pos.x, pos.y, 0, 0, 5, n);
+            else
+                drawTexture(matrixStack, pos.x, pos.y + 182 - n, 0, 182 - n, 5, n);
         }
 
         callbackInfo.cancel();
