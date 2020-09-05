@@ -40,12 +40,14 @@ public abstract class InGameHudMixin extends DrawableHelper {
     @Inject(at = @At("HEAD"), cancellable = true,
             method = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbar(FLnet/minecraft/client/util/math/MatrixStack;)V")
     public void renderHotbar(float f, MatrixStack matrixStack, CallbackInfo callbackInfo) {
+        if (!config.enabled) return;
+
         PlayerEntity playerEntity = getCameraPlayer();
         if (playerEntity == null) return;
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        if (BAR_BORDER) {
+        if (config.hotbarBorder) {
             client.getTextureManager().bindTexture(BARS);
             Vec2i pos = getSlotPos(0, scaledWidth, scaledHeight);
             drawTexture(matrixStack, pos.x - 1, pos.y - 1, 20, 0, 22, 182);
@@ -91,6 +93,8 @@ public abstract class InGameHudMixin extends DrawableHelper {
     }
 
     public void verticality$drawStatusBar(MatrixStack matrixStack, int i, int u1, int u2, int v, int val, int color) {
+        if (!config.enabled) return;
+
         Vec2i pos = getStatusPos(i, scaledWidth, scaledHeight);
 
         drawTexture(matrixStack, pos.x, pos.y, u1, v, 9, 9);
@@ -104,6 +108,8 @@ public abstract class InGameHudMixin extends DrawableHelper {
     @Inject(at = @At("HEAD"), cancellable = true,
             method = "Lnet/minecraft/client/gui/hud/InGameHud;renderStatusBars(Lnet/minecraft/client/util/math/MatrixStack;)V")
     public void renderStatusBars(MatrixStack matrixStack, CallbackInfo callbackInfo) {
+        if (!config.enabled) return;
+
         PlayerEntity playerEntity = getCameraPlayer();
         if (playerEntity == null) return;
 
@@ -132,6 +138,8 @@ public abstract class InGameHudMixin extends DrawableHelper {
     @Inject(at = @At("HEAD"), cancellable = true,
             method = "Lnet/minecraft/client/gui/hud/InGameHud;renderExperienceBar(Lnet/minecraft/client/util/math/MatrixStack;I)V")
     public void renderExperienceBar(MatrixStack matrixStack, int _x, CallbackInfo callbackInfo) {
+        if (!config.enabled) return;
+
         client.getTextureManager().bindTexture(EntryPoint.BARS);
 
         int nextLevelXP = client.player.getNextLevelExperience();
@@ -140,7 +148,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
             Vec2i pos = getBarPos(scaledWidth, scaledHeight);
             drawTexture(matrixStack, pos.x, pos.y, 15, 0, 5, 182);
             if (n > 0) {
-                if (BAR_FLIP)
+                if (config.flipBar)
                     drawTexture(matrixStack, pos.x, pos.y + 182 - n, 10, 182 - n, 5, n);
                 else
                     drawTexture(matrixStack, pos.x, pos.y, 10, 0, 5, n);
@@ -165,13 +173,15 @@ public abstract class InGameHudMixin extends DrawableHelper {
     @Inject(at = @At("HEAD"), cancellable = true,
             method = "Lnet/minecraft/client/gui/hud/InGameHud;renderMountJumpBar(Lnet/minecraft/client/util/math/MatrixStack;I)V")
     public void renderMountJumpBar(MatrixStack matrixStack, int _x, CallbackInfo callbackInfo) {
+        if (!config.enabled) return;
+
         client.getTextureManager().bindTexture(EntryPoint.BARS);
 
         int n = (int)(client.player.method_3151() * 183f);
         Vec2i pos = getBarPos(scaledWidth, scaledHeight);
         drawTexture(matrixStack, pos.x, pos.y, 5, 0, 5, 182);
         if (n > 0) {
-            if (BAR_FLIP)
+            if (config.flipBar)
                 drawTexture(matrixStack, pos.x, pos.y + 182 - n, 0, 182 - n, 5, n);
             else
                 drawTexture(matrixStack, pos.x, pos.y, 0, 0, 5, n);
@@ -183,13 +193,17 @@ public abstract class InGameHudMixin extends DrawableHelper {
     @Inject(at = @At("HEAD"), cancellable = true,
             method = "Lnet/minecraft/client/gui/hud/InGameHud;renderMountHealth(Lnet/minecraft/client/util/math/MatrixStack;)V")
     public void renderMountHealth(MatrixStack matrixStack, CallbackInfo callbackInfo) {
+        if (!config.enabled) return;
+
         callbackInfo.cancel();
     }
 
     @ModifyArg(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;drawWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/text/StringRenderable;FFI)I"),
                method = "Lnet/minecraft/client/gui/hud/InGameHud;renderHeldItemTooltip(Lnet/minecraft/client/util/math/MatrixStack;)V", index = 3)
     public float centerItemTooltip(float y) {
-        if (!ITEM_TOOLTIP) return scaledHeight + 1000;
+        if (!config.enabled) return y;
+
+        if (!config.itemTooltip) return scaledHeight + 1000;
         return scaledHeight / 2 - 18;
     }
 }
