@@ -1,6 +1,6 @@
-package dzwdz.verticality.client;
+package dzwdz.vertical_hotbar.client;
 
-import dzwdz.verticality.Vec2i;
+import dzwdz.vertical_hotbar.Vec2i;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class EntryPoint implements ClientModInitializer {
-    public static final Identifier BARS = new Identifier("verticality", "textures/gui/bars.png");
+    public static final Identifier BARS = new Identifier("vertical_hotbar", "textures/gui/bars.png");
 
     public static ModConfig config;
 

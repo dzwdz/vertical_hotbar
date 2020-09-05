@@ -1,4 +1,4 @@
-package dzwdz.verticality.client;
+package dzwdz.vertical_hotbar.client;
 
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;

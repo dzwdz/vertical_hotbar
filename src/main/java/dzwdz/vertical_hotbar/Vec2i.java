@@ -1,4 +1,4 @@
-package dzwdz.verticality;
+package dzwdz.vertical_hotbar;
 
 public class Vec2i {
     public final int x;

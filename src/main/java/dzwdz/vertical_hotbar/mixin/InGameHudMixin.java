@@ -1,8 +1,8 @@
-package dzwdz.verticality.mixin;
+package dzwdz.vertical_hotbar.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dzwdz.verticality.Vec2i;
-import dzwdz.verticality.client.EntryPoint;
+import dzwdz.vertical_hotbar.Vec2i;
+import dzwdz.vertical_hotbar.client.EntryPoint;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static dzwdz.verticality.client.EntryPoint.*;
+import static dzwdz.vertical_hotbar.client.EntryPoint.*;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin extends DrawableHelper {
