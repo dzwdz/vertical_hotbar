@@ -23,34 +23,55 @@ public class EntryPoint implements ClientModInitializer {
     }
 
     public static Vec2i getSlotPos(int i, int width, int height) {
-        if (i == 9) return new Vec2i(
+        Vec2i pos;
+        if (i == 9)
+            pos = new Vec2i(
                 width - 54 - (config.hotbarBorder ? 1 : 0),
                 2
-        ).add(OFFSET);
-        return new Vec2i(
+            );
+        else {
+            if (!config.attachToTop) i = 8-i;
+            pos = new Vec2i(
                 width - 22,
                 2 + i * 20
-        ).add(OFFSET);
+            );
+        }
+
+        pos = pos.add(OFFSET);
+        if (!config.attachToTop) pos = pos.invertY(height - 20);
+        return pos;
     }
 
     public static Vec2i getStatusPos(int i, int width, int height) {
-        return new Vec2i(
+        Vec2i pos = new Vec2i(
                 width - 43 - (config.hotbarBorder ? 1 : 0),
                 26 + i * 12
-        ).add(OFFSET);
+        );
+
+        pos = pos.add(OFFSET);
+        if (!config.attachToTop) pos = pos.invertY(height - 9);
+        return pos;
     }
 
     public static Vec2i getBarPos(int width, int height) {
-        return new Vec2i(
+        Vec2i pos = new Vec2i(
                 width - 30 - (config.hotbarBorder ? 1 : 0),
                 1
-        ).add(OFFSET);
+        );
+
+        pos = pos.add(OFFSET);
+        if (!config.attachToTop) pos = pos.invertY(height - 182);
+        return pos;
     }
 
     public static Vec2i getLevelPos(int width, int height) {
-        return new Vec2i(
+        Vec2i pos = new Vec2i(
                 width - 33 - (config.hotbarBorder ? 1 : 0),
                 174
-        ).add(OFFSET);
+        );
+
+        pos = pos.add(OFFSET);
+        if (!config.attachToTop) pos = pos.invertY(height - 8);
+        return pos;
     }
 }

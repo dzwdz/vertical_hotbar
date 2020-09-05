@@ -1,6 +1,7 @@
 {
   "text.autoconfig.verticality.title": "Verticality",
   "text.autoconfig.verticality.option.enabled": "Enable",
+  "text.autoconfig.verticality.option.attachToTop": "Attach to top",
   "text.autoconfig.verticality.option.flipBar": "Flip the XP bar",
   "text.autoconfig.verticality.option.hotbarBorder": "Draw the hotbar border",
   "text.autoconfig.verticality.option.itemTooltip": "Draw the item tooltip"

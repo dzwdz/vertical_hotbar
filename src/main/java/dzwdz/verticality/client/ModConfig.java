@@ -6,6 +6,7 @@ import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
 @Config(name = "verticality")
 public class ModConfig implements ConfigData {
     public boolean enabled = true;
+    public boolean attachToTop = false;
     public boolean flipBar = false;
     public boolean hotbarBorder = true;
     public boolean itemTooltip = true;

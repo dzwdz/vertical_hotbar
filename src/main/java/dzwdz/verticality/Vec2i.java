@@ -12,4 +12,6 @@ public class Vec2i {
     public Vec2i add(Vec2i other) {
         return new Vec2i(x + other.x, y + other.y);
     }
+
+    public Vec2i invertY(int toAdd) {return new Vec2i(x, toAdd - y);}
 }
