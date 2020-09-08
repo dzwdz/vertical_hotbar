@@ -1,0 +1,8 @@
+{
+  "text.autoconfig.vertical_hotbar.title": "竖排快捷栏 §2(Verticality)",
+  "text.autoconfig.vertical_hotbar.option.enabled": "启用",
+  "text.autoconfig.vertical_hotbar.option.attachToTop": "吸附到顶端",
+  "text.autoconfig.vertical_hotbar.option.flipBar": "翻转经验栏",
+  "text.autoconfig.vertical_hotbar.option.hotbarBorder": "渲染快捷栏边框",
+  "text.autoconfig.vertical_hotbar.option.itemTooltip": "渲染物品提示"
+}
